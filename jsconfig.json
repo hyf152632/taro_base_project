@@ -1,0 +1,44 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "checkJs": true,
+        "jsx": "preserve",
+        "baseUrl": ".",
+        "paths": {
+            "@/actions/*": [
+                "./src/actions/*"
+            ],
+            "@/assets/*": [
+                "./src/assets/*"
+            ],
+            "@/components/*": [
+                "./src/components/*"
+            ],
+            "@/config/*": [
+                "./src/config/*"
+            ],
+            "@/locales/*": [
+                "./src/locales/*"
+            ],
+            "@/models/*": [
+                "./src/models/*"
+            ],
+            "@/pages/*": [
+                "./src/pages/*"
+            ],
+            "@/services/*": [
+                "./src/services/*"
+            ],
+            "@/styles/*": [
+                "./src/styles/*"
+            ],
+            "@/utils/*": [
+                "./src/utils/*"
+            ],
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "**/node_modules/*"
+    ]
+}

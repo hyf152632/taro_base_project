@@ -1,0 +1,92 @@
+@import './variables';
+
+@mixin folded-corner($background, $size, $angle: 30deg) {
+  position: relative;
+  background: $background; /* 回退样式 */
+  background: linear-gradient($angle - 180deg, transparent $size, $background 0);
+  border-radius: 0.5em;
+  //现在scss还不支持sin 和 cos ,需要使用compass框架
+  $x: $size / sin($angle);
+  $y: $size / cos($angle);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: linear-gradient(
+        to left bottom,
+        transparent 50%,
+        rgba(0, 0, 0, 0.2) 0,
+        rgba(0, 0, 0, 0.4)
+      )
+      100% 0 no-repeat;
+    width: $y;
+    height: $x;
+    transform: translateY($y - $x) rotate(2 * $angle - 90deg);
+    transform-origin: bottom right;
+    border-bottom-left-radius: inherit;
+    box-shadow: -0.2em 0.2em 0.3em -0.1em rgba(0, 0, 0, 0.2);
+  }
+}
+
+/// Responsive breakpoint manager
+/// @access public
+/// @param {String} $breakpoint - Breakpoint
+/// @requires $breakpoints
+@mixin respond-to($breakpoint) {
+  $raw-query: map-get($breakpoints, $breakpoint);
+
+  @if $raw-query {
+    $query: if(
+      type-of($raw-query) == 'string',
+      unquote($raw-query),
+      inspect($raw-query)
+    );
+    @media screen and (min-width: #{$query}) {
+      @content;
+    }
+  } @else {
+    @error 'No value found for `#{$breakpoint}`. '
+    + 'Please make sure it is defined in `$breakpoints` map.';
+  }
+}
+
+@mixin respond-smaller-to($breakpoint) {
+  $raw-query: map-get($breakpoints, $breakpoint);
+
+  @if $raw-query {
+    $query: if(
+      type-of($raw-query) == 'string',
+      unquote($raw-query),
+      inspect($raw-query)
+    );
+    @media screen and (max-width: #{$query}) {
+      @content;
+    }
+  } @else {
+    @error 'No value found for `#{$breakpoint}`. '
+    + 'Please make sure it is defined in `$breakpoints` map.';
+  }
+}
+
+/**
+ * 对于不能打包到 RN 的样式，可以用 mixins 引入，相对美观一些
+ */
+ @mixin eject($attr, $value) {
+  /*postcss-pxtransform rn eject enable*/
+  #{$attr}: $value;
+  /*postcss-pxtransform rn eject disable*/
+}
+
+/**
+ * // NOTE Taro 编译成 RN 时对 border 的处理有问题
+ * RN 不支持针对某一边设置 style，即 border-bottom-style 会报错
+ * 那么 border-bottom: 1px 就需要写成如下形式：
+ * border: 0 style color; border-bottom-width: 1px;
+ */
+ @mixin border($dir, $width, $style, $color) {
+  border: 0 $style $color;
+  @each $d in $dir {
+    #{border-#{$d}-width}: $width;
+  }
+}
